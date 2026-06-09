@@ -7,6 +7,7 @@ import { listStaff } from "@/lib/staff/staff-admin";
 import StamperForm from "../stamper-form";
 import RedeemerForm from "../redeemer-form";
 import StaffRow from "../staff-row";
+import { PageHeading, SectionTitle, ListCaption } from "../section";
 
 /**
  * Admin Staff sub-page (/admin/staff).
@@ -27,33 +28,18 @@ export default async function AdminStaffPage() {
   const redeemers = staff.filter((s) => s.role === "redeemer");
 
   return (
-    <main className="flex flex-1 flex-col gap-12 bg-zinc-50 px-6 py-12 dark:bg-black">
-      <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
-          Staff
-        </h1>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          Create and manage stampers and redeemers.
-        </p>
-      </header>
+    <main className="flex flex-1 flex-col gap-10 px-6 py-12">
+      <PageHeading title="Staff">
+        Create and manage stampers and redeemers.
+      </PageHeading>
 
-      {/* ── Stampers ───────────────────────────────────────────── */}
-      <section aria-labelledby="section-stampers" className="flex flex-col gap-4">
-        <h2
-          id="section-stampers"
-          className="text-xl font-semibold text-black dark:text-zinc-50"
-        >
-          Stampers
-        </h2>
-        <h3 className="text-base font-medium text-black dark:text-zinc-50">
-          New stamper
-        </h3>
+      <section aria-labelledby="section-stampers" className="flex flex-col gap-5">
+        <SectionTitle id="section-stampers">Stampers</SectionTitle>
+        <ListCaption>New stamper</ListCaption>
         <StamperForm stamps={stampOptions} />
-        <h3 className="text-base font-medium text-black dark:text-zinc-50">
-          All stampers ({stampers.length})
-        </h3>
+        <ListCaption>All stampers ({stampers.length})</ListCaption>
         {stampers.length === 0 ? (
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          <p className="border-brutal bg-white px-4 py-3 text-sm font-medium shadow-hard-sm">
             No stampers yet.
           </p>
         ) : (
@@ -65,23 +51,13 @@ export default async function AdminStaffPage() {
         )}
       </section>
 
-      {/* ── Redeemers ──────────────────────────────────────────── */}
-      <section aria-labelledby="section-redeemers" className="flex flex-col gap-4">
-        <h2
-          id="section-redeemers"
-          className="text-xl font-semibold text-black dark:text-zinc-50"
-        >
-          Redeemers
-        </h2>
-        <h3 className="text-base font-medium text-black dark:text-zinc-50">
-          New redeemer
-        </h3>
+      <section aria-labelledby="section-redeemers" className="flex flex-col gap-5">
+        <SectionTitle id="section-redeemers">Redeemers</SectionTitle>
+        <ListCaption>New redeemer</ListCaption>
         <RedeemerForm />
-        <h3 className="text-base font-medium text-black dark:text-zinc-50">
-          All redeemers ({redeemers.length})
-        </h3>
+        <ListCaption>All redeemers ({redeemers.length})</ListCaption>
         {redeemers.length === 0 ? (
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          <p className="border-brutal bg-white px-4 py-3 text-sm font-medium shadow-hard-sm">
             No redeemers yet.
           </p>
         ) : (

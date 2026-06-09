@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
-import { Space_Grotesk } from "next/font/google";
+import { Space_Grotesk, Archivo_Black } from "next/font/google";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
+  subsets: ["latin"],
+});
+
+// Heavy display face for signage-style headings. Ships a single weight (400/900-look).
+const archivoBlack = Archivo_Black({
+  variable: "--font-archivo-black",
+  weight: "400",
   subsets: ["latin"],
 });
 
@@ -20,7 +27,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} h-full antialiased`}
+      className={`${spaceGrotesk.variable} ${archivoBlack.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

@@ -5,6 +5,7 @@ import { requireRole } from "@/lib/auth/authorize";
 import { getDb } from "@/lib/db/client";
 import { listStamps } from "@/lib/stamp/stamp";
 import StampForm from "../stamps-form";
+import { PageHeading, SectionTitle, ListCaption } from "../section";
 
 /**
  * Admin Stamps sub-page (/admin/stamps).
@@ -20,30 +21,18 @@ export default async function AdminStampsPage() {
   const stamps = await listStamps(db);
 
   return (
-    <main className="flex flex-1 flex-col gap-12 bg-zinc-50 px-6 py-12 dark:bg-black">
-      <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
-          Stamps
-        </h1>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          Create stamps and view the full stamp catalogue.
-        </p>
-      </header>
+    <main className="flex flex-1 flex-col gap-10 px-6 py-12">
+      <PageHeading title="Stamps">
+        Create stamps and view the full stamp catalogue.
+      </PageHeading>
 
-      {/* ── Stamps ─────────────────────────────────────────────── */}
-      <section aria-labelledby="section-stamps" className="flex flex-col gap-4">
-        <h2
-          id="section-stamps"
-          className="text-xl font-semibold text-black dark:text-zinc-50"
-        >
-          New stamp
-        </h2>
+      <section aria-labelledby="section-stamps" className="flex flex-col gap-5">
+        <SectionTitle id="section-stamps">New stamp</SectionTitle>
         <StampForm />
-        <h3 className="text-base font-medium text-black dark:text-zinc-50">
-          All stamps ({stamps.length})
-        </h3>
+
+        <ListCaption>All stamps ({stamps.length})</ListCaption>
         {stamps.length === 0 ? (
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          <p className="border-brutal bg-white px-4 py-3 text-sm font-medium shadow-hard-sm">
             No stamps yet. Create the first one above.
           </p>
         ) : (
@@ -51,7 +40,9 @@ export default async function AdminStampsPage() {
             {stamps.map((stamp) => (
               <li
                 key={stamp.id}
-                className="flex flex-col items-center gap-2 rounded-xl border border-black/10 bg-white p-3 dark:border-white/15 dark:bg-zinc-900"
+                className={`flex flex-col items-center gap-2 border-brutal bg-white p-3 shadow-hard-sm ${
+                  stamp.active ? "" : "opacity-50"
+                }`}
               >
                 <Image
                   src={stamp.imageUrl}
@@ -59,13 +50,15 @@ export default async function AdminStampsPage() {
                   width={96}
                   height={96}
                   unoptimized
-                  className="h-24 w-24 rounded-lg object-cover"
+                  className="h-24 w-24 border-[3px] border-black object-cover"
                 />
-                <span className="text-center text-sm font-medium text-black dark:text-zinc-50">
+                <span className="text-center text-sm font-bold uppercase tracking-tight text-black">
                   {stamp.name}
                 </span>
                 {!stamp.active && (
-                  <span className="text-xs text-zinc-500">inactive</span>
+                  <span className="border-[2px] border-black bg-[var(--color-danger)] px-1.5 text-[10px] font-bold uppercase text-white">
+                    inactive
+                  </span>
                 )}
               </li>
             ))}

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { StampCard } from "@/components/StampCard";
+import { fieldLabel, fieldInput, btnPrimary, errorBanner } from "./field-styles";
 
 const DEFAULT_BG_COLOR = "#0057ff";
 const DEFAULT_TEXT_COLOR = "#ffffff";
@@ -73,17 +74,17 @@ export default function StampForm() {
       onSubmit={onSubmit}
       className="flex w-full max-w-sm flex-col gap-4"
     >
-      <label className="flex flex-col gap-1 text-left text-sm font-medium">
+      <label className={fieldLabel}>
         Name
         <input
           name="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-          className="h-11 rounded-lg border border-black/15 px-3 dark:border-white/20 dark:bg-zinc-900"
+          className={fieldInput}
         />
       </label>
-      <label className="flex flex-col gap-1 text-left text-sm font-medium">
+      <label className={fieldLabel}>
         Square image
         <input
           name="image"
@@ -91,50 +92,52 @@ export default function StampForm() {
           accept="image/png,image/jpeg,image/webp"
           onChange={handleFileChange}
           required
-          className="text-sm"
+          className="border-brutal bg-white p-2 text-sm shadow-hard-sm file:mr-3 file:border-0 file:bg-black file:px-3 file:py-1 file:font-bold file:uppercase file:text-white"
         />
       </label>
-      <label className="flex flex-col gap-1 text-left text-sm font-medium">
-        Background color
-        <input
-          name="bgColor"
-          type="color"
-          value={bgColor}
-          onChange={(e) => setBgColor(e.target.value)}
-          className="h-11 w-full cursor-pointer rounded-lg border border-black/15"
-        />
-      </label>
-      <label className="flex flex-col gap-1 text-left text-sm font-medium">
-        Text color
-        <input
-          name="textColor"
-          type="color"
-          value={textColor}
-          onChange={(e) => setTextColor(e.target.value)}
-          className="h-11 w-full cursor-pointer rounded-lg border border-black/15"
-        />
-      </label>
+      <div className="flex gap-4">
+        <label className={`${fieldLabel} flex-1`}>
+          Background color
+          <input
+            name="bgColor"
+            type="color"
+            value={bgColor}
+            onChange={(e) => setBgColor(e.target.value)}
+            className="h-12 w-full cursor-pointer border-brutal shadow-hard-sm"
+          />
+        </label>
+        <label className={`${fieldLabel} flex-1`}>
+          Text color
+          <input
+            name="textColor"
+            type="color"
+            value={textColor}
+            onChange={(e) => setTextColor(e.target.value)}
+            className="h-12 w-full cursor-pointer border-brutal shadow-hard-sm"
+          />
+        </label>
+      </div>
 
-      <section aria-label="Preview">
-        <p className="mb-2 text-sm font-medium">Preview</p>
-        <StampCard
-          name={name || "Preview"}
-          imageUrl={previewUrl || "/placeholder.png"}
-          bgColor={bgColor}
-          textColor={textColor}
-        />
+      <section aria-label="Preview" className="flex flex-col gap-2">
+        <p className="text-xs font-bold uppercase tracking-widest text-black/50">
+          Live preview
+        </p>
+        <div className="w-40">
+          <StampCard
+            name={name || "Preview"}
+            imageUrl={previewUrl || "/placeholder.png"}
+            bgColor={bgColor}
+            textColor={textColor}
+          />
+        </div>
       </section>
 
       {error && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className={errorBanner}>
           {error}
         </p>
       )}
-      <button
-        type="submit"
-        disabled={submitting}
-        className="flex h-12 items-center justify-center rounded-full bg-black px-5 font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-60 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
-      >
+      <button type="submit" disabled={submitting} className={btnPrimary}>
         {submitting ? "Creating…" : "Create stamp"}
       </button>
     </form>

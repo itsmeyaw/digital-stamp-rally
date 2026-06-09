@@ -42,15 +42,22 @@ export default function CardPoller({
     return () => clearInterval(id);
   }, [pollIntervalMs]);
 
+  const filled = card.activeStamps.length;
+  const total = card.slots.length || 5;
+
   return (
-    <div className="flex flex-col items-center gap-6">
-      <ul aria-label="stamp slots" className="grid grid-cols-2 gap-3">
+    <div className="flex w-full max-w-sm flex-col items-center gap-6">
+      {/* Progress tally — big and proud. */}
+      <div className="flex w-full items-center justify-between border-brutal bg-[var(--color-surface)] px-4 py-3 shadow-hard">
+        <span className="font-bold uppercase tracking-widest">Progress</span>
+        <span className="font-display text-2xl">
+          {filled}<span className="text-[var(--color-text)]/40">/{total}</span>
+        </span>
+      </div>
+
+      <ul aria-label="stamp slots" className="grid w-full grid-cols-2 gap-4">
         {card.slots.map((slot, i) => (
-          <li
-            key={i}
-            data-testid="slot"
-            data-filled={slot !== null}
-          >
+          <li key={i} data-testid="slot" data-filled={slot !== null}>
             {slot !== null ? (
               <StampCard
                 name={slot.name}
@@ -66,14 +73,19 @@ export default function CardPoller({
       </ul>
 
       {card.bonusCount > 0 && (
-        <p className="text-sm text-zinc-500">
+        <p className="border-[3px] border-black bg-[var(--color-pink)] px-3 py-1 text-sm font-bold uppercase tracking-wide text-white">
           +{card.bonusCount} bonus stamp{card.bonusCount !== 1 ? "s" : ""}
         </p>
       )}
 
       {card.complete && (
-        <div className="border-brutal shadow-hard w-full bg-yellow-300 py-3 text-center text-2xl font-black tracking-widest text-black">
-          COMPLETE!
+        <div className="relative w-full overflow-hidden border-brutal bg-[var(--color-lime)] shadow-hard-lg">
+          {/* Hazard stripes top & bottom frame the shout. */}
+          <div className="brutal-stripes h-3 w-full opacity-90" aria-hidden />
+          <p className="py-5 text-center font-display text-4xl uppercase tracking-[0.15em] text-black">
+            COMPLETE!
+          </p>
+          <div className="brutal-stripes h-3 w-full opacity-90" aria-hidden />
         </div>
       )}
     </div>

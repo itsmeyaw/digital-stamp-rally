@@ -17,6 +17,10 @@ const TABS = [
  *
  * Accessibility: Radix Tabs provides ARIA roles (tablist, tab) and keyboard
  * navigation (arrow keys, Home, End) out of the box.
+ *
+ * Brutalist styling: a thick black top rail, fat dividers between tabs, and an
+ * electric-blue active state with white uppercase signage type. The active tab
+ * lifts very slightly so it reads as a pressed physical key.
  */
 export function AdminTabBar() {
   const pathname = usePathname();
@@ -28,14 +32,16 @@ export function AdminTabBar() {
   return (
     <Tabs.Root value={current} onValueChange={(v) => router.push(v)}>
       <Tabs.List
-        className="fixed bottom-0 left-0 right-0 flex border-t-[3px] border-black"
-        style={{ backgroundColor: "var(--color-bg, #F5F5F0)" }}
+        className="fixed bottom-0 left-0 right-0 z-20 flex border-t-4 border-black bg-[var(--color-bg)]"
+        style={{ backgroundColor: "var(--color-bg, #FFF4E0)" }}
       >
-        {TABS.map((tab) => (
+        {TABS.map((tab, i) => (
           <Tabs.Trigger
             key={tab.value}
             value={tab.value}
-            className="flex-1 py-3 text-sm font-semibold data-[state=active]:bg-[#0057FF] data-[state=active]:text-white data-[state=inactive]:bg-[#F5F5F0] data-[state=inactive]:text-black"
+            className={`flex-1 py-4 text-sm font-bold uppercase tracking-widest transition-colors ${
+              i > 0 ? "border-l-4 border-black" : ""
+            } data-[state=active]:bg-[#0057FF] data-[state=active]:text-white data-[state=inactive]:bg-transparent data-[state=inactive]:text-black data-[state=inactive]:hover:bg-[var(--color-accent)]`}
           >
             {tab.label}
           </Tabs.Trigger>

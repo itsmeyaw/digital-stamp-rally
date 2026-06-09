@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { fieldLabel, fieldInput, btnPrimary, errorBanner } from "./field-styles";
 
 /**
  * Admin Redeemer-creation form (issue #6). Posts JSON to POST /api/admin/staff
@@ -42,17 +43,17 @@ export default function RedeemerForm() {
 
   return (
     <form onSubmit={onSubmit} className="flex w-full max-w-sm flex-col gap-4">
-      <label className="flex flex-col gap-1 text-left text-sm font-medium">
+      <label className={fieldLabel}>
         Username
         <input
           name="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
-          className="h-11 rounded-lg border border-black/15 px-3 dark:border-white/20 dark:bg-zinc-900"
+          className={fieldInput}
         />
       </label>
-      <label className="flex flex-col gap-1 text-left text-sm font-medium">
+      <label className={fieldLabel}>
         Password
         <input
           name="password"
@@ -60,19 +61,15 @@ export default function RedeemerForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="h-11 rounded-lg border border-black/15 px-3 dark:border-white/20 dark:bg-zinc-900"
+          className={fieldInput}
         />
       </label>
       {error && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className={errorBanner}>
           {error}
         </p>
       )}
-      <button
-        type="submit"
-        disabled={submitting}
-        className="flex h-12 items-center justify-center rounded-full bg-black px-5 font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-60 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
-      >
+      <button type="submit" disabled={submitting} className={btnPrimary}>
         {submitting ? "Creating…" : "Create redeemer"}
       </button>
     </form>

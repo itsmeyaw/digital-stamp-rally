@@ -1,29 +1,108 @@
 @import "tailwindcss";
 
 :root {
-  /* Neo-brutalism design tokens */
-  --color-bg: #F5F5F0;          /* off-white base background */
-  --color-primary: #0057FF;     /* electric blue accent */
-  --color-secondary: #FF6600;   /* orange complement */
-  --color-text: #000000;
-  --border: 3px solid #000000;
-  --shadow: 4px 4px 0px #000000; /* hard drop shadow, no blur */
+  /* ── Neo-brutalism design tokens ──────────────────────────────────────────
+     Loud "carnival brutalism": fat black borders, hard offset shadows, a hot
+     four-colour pop palette, zero rounded corners, paper-grain background. */
+  --color-bg: #FFF4E0;          /* warm paper base */
+  --color-surface: #FFFFFF;     /* card / input fill */
+  --color-primary: #0057FF;     /* electric blue */
+  --color-secondary: #FF6600;   /* hot orange */
+  --color-accent: #FFE100;      /* signage yellow */
+  --color-lime: #B6FF3C;        /* acid lime — success */
+  --color-pink: #FF4D9D;        /* shock pink */
+  --color-text: #0A0A0A;        /* near-black ink */
+  --color-danger: #FF2D2D;      /* alarm red */
+
+  /* Heavier than the old 3px/4px — brutalism reads at distance. */
+  --border-w: 4px;
+  --border: var(--border-w) solid #0A0A0A;
+  --shadow: 6px 6px 0px #0A0A0A;        /* hard drop shadow, no blur */
+  --shadow-lg: 10px 10px 0px #0A0A0A;   /* hero surfaces */
+  --shadow-sm: 3px 3px 0px #0A0A0A;     /* compact chips */
 }
 
 @theme inline {
   --font-sans: var(--font-space-grotesk);
+  --font-display: var(--font-archivo-black);
 }
 
 body {
-  background: var(--color-bg);
+  background-color: var(--color-bg);
+  /* Paper-grain dot grid — subtle texture instead of a flat fill. */
+  background-image: radial-gradient(rgba(10, 10, 10, 0.07) 1.4px, transparent 1.4px);
+  background-size: 22px 22px;
   color: var(--color-text);
   font-family: var(--font-space-grotesk), sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
+
+/* ── Core surface utilities ───────────────────────────────────────────────── */
 
 @utility shadow-hard {
   box-shadow: var(--shadow);
 }
 
+@utility shadow-hard-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+@utility shadow-hard-sm {
+  box-shadow: var(--shadow-sm);
+}
+
 @utility border-brutal {
   border: var(--border);
 }
+
+/* Display type: Archivo Black, tight tracking, used for signage headings. */
+@utility font-display {
+  font-family: var(--font-archivo-black), var(--font-space-grotesk), sans-serif;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+}
+
+/* ── Signature tactile press ──────────────────────────────────────────────────
+   Every interactive brutalist surface lifts toward the light on hover and then
+   *slams* into its own shadow when pressed. One shared gesture across the app. */
+.btn-press {
+  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+}
+.btn-press:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lg);
+}
+.btn-press:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0px #0A0A0A;
+}
+
+/* Accessibility: honour reduced-motion — kill the tactile travel. */
+@media (prefers-reduced-motion: reduce) {
+  .btn-press,
+  .btn-press:hover:not(:disabled),
+  .btn-press:active:not(:disabled) {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* ── Diagonal hazard stripes for the celebratory COMPLETE banner ──────────── */
+.brutal-stripes {
+  background-image: repeating-linear-gradient(
+    45deg,
+    #0A0A0A 0,
+    #0A0A0A 14px,
+    transparent 14px,
+    transparent 28px
+  );
+}
+
+/* ── Native color inputs: strip the chrome so the swatch reads as brutalist ── */
+input[type="color"] {
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 0;
+}
+input[type="color"]::-webkit-color-swatch-wrapper { padding: 4px; }
+input[type="color"]::-webkit-color-swatch { border: none; }
