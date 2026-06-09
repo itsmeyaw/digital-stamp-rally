@@ -81,9 +81,11 @@ describe("GET /api/card", () => {
       .values({ name: "S2", imageUrl: "https://blob/s2.png" })
       .returning();
 
+    const t0 = new Date("2024-01-01T00:00:00Z");
+    const t1 = new Date("2024-01-01T00:00:01Z");
     await h.db.insert(grants).values([
-      { userId: user.id, stampId: stamp1.id },
-      { userId: user.id, stampId: stamp2.id },
+      { userId: user.id, stampId: stamp1.id, acquiredAt: t0 },
+      { userId: user.id, stampId: stamp2.id, acquiredAt: t1 },
     ]);
 
     const res = await getCard(userCookie(user.id));
