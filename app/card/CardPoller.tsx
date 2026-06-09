@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { StampCard, EmptySlot } from "@/components/StampCard";
+import type { SlotData } from "@/lib/user/card";
 
 interface CardResult {
   activeStamps: string[];
-  slots: (string | null)[];
+  slots: (SlotData | null)[];
   complete: boolean;
   bonusCount: number;
 }
@@ -42,25 +44,23 @@ export default function CardPoller({
 
   return (
     <div className="flex flex-col items-center gap-6">
-      {card.complete && (
-        <div className="rounded-full bg-green-100 px-4 py-2 text-sm font-semibold text-green-700 dark:bg-green-900/30 dark:text-green-400">
-          Complete! 🎉
-        </div>
-      )}
-
-      <ul aria-label="stamp slots" className="grid grid-cols-5 gap-3">
+      <ul aria-label="stamp slots" className="grid grid-cols-2 gap-3">
         {card.slots.map((slot, i) => (
           <li
             key={i}
             data-testid="slot"
             data-filled={slot !== null}
-            className={`flex aspect-square w-14 items-center justify-center rounded-lg border-2 ${
-              slot !== null
-                ? "border-green-400 bg-green-50 text-green-700 dark:border-green-600 dark:bg-green-900/20 dark:text-green-400"
-                : "border-dashed border-zinc-300 text-zinc-300 dark:border-zinc-700 dark:text-zinc-700"
-            }`}
           >
-            {slot !== null ? "✓" : i + 1}
+            {slot !== null ? (
+              <StampCard
+                name={slot.name}
+                imageUrl={slot.imageUrl}
+                bgColor={slot.bgColor}
+                textColor={slot.textColor}
+              />
+            ) : (
+              <EmptySlot slotNumber={i + 1} />
+            )}
           </li>
         ))}
       </ul>
@@ -69,6 +69,12 @@ export default function CardPoller({
         <p className="text-sm text-zinc-500">
           +{card.bonusCount} bonus stamp{card.bonusCount !== 1 ? "s" : ""}
         </p>
+      )}
+
+      {card.complete && (
+        <div className="border-brutal shadow-hard w-full bg-yellow-300 py-3 text-center text-2xl font-black tracking-widest text-black">
+          COMPLETE!
+        </div>
       )}
     </div>
   );
