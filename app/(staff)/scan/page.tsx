@@ -7,12 +7,22 @@ import { staff, stamps } from "@/lib/db/schema";
 import ScanClient from "./ScanClient";
 
 /**
- * Stamper scan/grant surface (issue #7).
+ * Stamper scan/grant surface (issue #7, #26).
  *
  * Server component: authenticates the Stamper, resolves their bound Stamp,
  * and passes stamp info to the client component for the interactive grant flow.
+ *
+ * Accepts ?code= from native-camera deep links — passes it to ScanClient as
+ * initialCode so the Stamper just taps "Grant stamp" once to confirm.
  */
-export default async function ScanPage() {
+export default async function ScanPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ code?: string }>;
+}) {
+  const { code } = await searchParams;
+  const initialCode = code ? code.trim().toUpperCase() : undefined;
+
   const session = await getSession();
   if (!requireRole(session, "stamper")) redirect("/welcome");
 
@@ -57,7 +67,7 @@ export default async function ScanPage() {
   return (
     <main className="flex flex-1 flex-col items-center gap-8 px-6 py-12">
       <h1 className="font-display text-4xl uppercase text-black">Scan</h1>
-      <ScanClient stampName={stamp.name} stampImageUrl={stamp.imageUrl} />
+      <ScanClient stampName={stamp.name} stampImageUrl={stamp.imageUrl} initialCode={initialCode} />
     </main>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useCallback } from "react";
 
 interface GrantResult {
   granted: boolean;
@@ -17,28 +17,14 @@ interface GrantResult {
 interface ScanClientProps {
   stampName: string;
   stampImageUrl: string;
+  initialCode?: string;
 }
 
-export default function ScanClient({ stampName, stampImageUrl }: ScanClientProps) {
-  const [userCode, setUserCode] = useState("");
+export default function ScanClient({ stampName, stampImageUrl, initialCode }: ScanClientProps) {
+  const [userCode, setUserCode] = useState(initialCode ?? "");
   const [lastResult, setLastResult] = useState<GrantResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [sessionGrantCount, setSessionGrantCount] = useState(0);
-  const [cameraStarted, setCameraStarted] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  const startCamera = useCallback(async () => {
-    setCameraStarted(true);
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    } catch {
-      // Camera not available or permission denied — fallback to manual code only
-    }
-  }, []);
 
   const handleGrant = useCallback(async () => {
     const code = userCode.trim().toUpperCase();
@@ -63,9 +49,6 @@ export default function ScanClient({ stampName, stampImageUrl }: ScanClientProps
       }
       const result: GrantResult = await res.json();
       setLastResult(result);
-      if (result.granted) {
-        setSessionGrantCount((c) => c + 1);
-      }
       setUserCode("");
     } catch {
       setError("Network error. Please try again.");
@@ -73,6 +56,12 @@ export default function ScanClient({ stampName, stampImageUrl }: ScanClientProps
       setLoading(false);
     }
   }, [userCode]);
+
+  const handleScanNext = useCallback(() => {
+    setLastResult(null);
+    setError(null);
+    setUserCode("");
+  }, []);
 
   const activeCount = lastResult?.card.activeStamps.length ?? 0;
 
@@ -94,32 +83,6 @@ export default function ScanClient({ stampName, stampImageUrl }: ScanClientProps
         <p className="text-xs font-bold uppercase tracking-widest text-black/50">
           The stamp you grant
         </p>
-      </div>
-
-      {/* Camera */}
-      {!cameraStarted ? (
-        <button
-          onClick={startCamera}
-          className="btn-press border-brutal shadow-hard bg-black px-6 py-3 font-bold uppercase tracking-wide text-white min-h-[48px]"
-        >
-          Start camera
-        </button>
-      ) : (
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          muted
-          className="w-full border-brutal shadow-hard"
-          aria-label="Camera viewfinder"
-        />
-      )}
-
-      {/* Or divider */}
-      <div className="flex items-center gap-3">
-        <div className="h-1 flex-1 bg-black" />
-        <span className="text-xs font-bold uppercase tracking-widest text-black">or</span>
-        <div className="h-1 flex-1 bg-black" />
       </div>
 
       {/* Manual code entry */}
@@ -157,43 +120,52 @@ export default function ScanClient({ stampName, stampImageUrl }: ScanClientProps
 
       {/* Last result */}
       {lastResult && (
-        <div
-          data-testid="result-card"
-          className={`border-brutal shadow-hard px-5 py-4 ${
-            lastResult.alreadyHad
-              ? "bg-[var(--color-accent)]"
-              : "bg-[var(--color-lime)]"
-          }`}
-        >
-          {lastResult.alreadyHad ? (
-            <p className="font-display text-xl uppercase text-black">
-              Already had this stamp
-            </p>
-          ) : (
-            <>
-              <p className="font-display text-2xl uppercase text-black">
-                Granted ✓
+        <>
+          <div
+            data-testid="result-card"
+            className={`border-brutal shadow-hard px-5 py-4 ${
+              lastResult.alreadyHad
+                ? "bg-[var(--color-accent)]"
+                : "bg-[var(--color-lime)]"
+            }`}
+          >
+            {lastResult.alreadyHad ? (
+              <p className="font-display text-xl uppercase text-black">
+                Already had this stamp
               </p>
-              <p className="mt-1 text-sm font-bold text-black/70">
-                {activeCount}/{5} stamps collected
-                {lastResult.card.bonusCount > 0 &&
-                  ` (+${lastResult.card.bonusCount} bonus)`}
-              </p>
-              {lastResult.completionCaptured && (
-                <p className="mt-2 inline-block border-[3px] border-black bg-[var(--color-pink)] px-2 py-0.5 text-sm font-bold uppercase text-white">
-                  🎉 Completion earned!
+            ) : (
+              <>
+                <p className="font-display text-2xl uppercase text-black">
+                  Granted ✓
                 </p>
-              )}
-            </>
-          )}
-        </div>
-      )}
+                <p className="mt-1 text-sm font-bold text-black/70">
+                  {activeCount}/{5} stamps collected
+                  {lastResult.card.bonusCount > 0 &&
+                    ` (+${lastResult.card.bonusCount} bonus)`}
+                </p>
+                {lastResult.completionCaptured && (
+                  <p className="mt-2 inline-block border-[3px] border-black bg-[var(--color-pink)] px-2 py-0.5 text-sm font-bold uppercase text-white">
+                    🎉 Completion earned!
+                  </p>
+                )}
+              </>
+            )}
+          </div>
 
-      {/* Running tally */}
-      <p className="text-center text-sm font-bold uppercase tracking-wide text-black/60">
-        Granted <span className="text-black">{sessionGrantCount}</span> stamp
-        {sessionGrantCount !== 1 ? "s" : ""} this session
-      </p>
+          {/* Scan-next hint */}
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-sm font-bold uppercase tracking-wide text-black/60">
+              Ready for the next visitor
+            </p>
+            <button
+              onClick={handleScanNext}
+              className="btn-press border-brutal shadow-hard bg-white px-5 py-2 font-bold uppercase tracking-wide text-black min-h-[44px]"
+            >
+              Scan next
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
