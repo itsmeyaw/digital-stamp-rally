@@ -1,4 +1,11 @@
-import { pgTable, uuid, char, text, timestamp } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  char,
+  text,
+  timestamp,
+  boolean,
+} from "drizzle-orm/pg-core";
 
 /**
  * A participant who collects Stamps (see CONTEXT.md "User").
@@ -51,3 +58,30 @@ export const staff = pgTable("staff", {
 
 export type Staff = typeof staff.$inferSelect;
 export type NewStaff = typeof staff.$inferInsert;
+
+/**
+ * A Stamp — a collectible an Administrator creates with a name and a square
+ * image (CONTEXT.md "Stamp"). Stamps are referenced by grants in later slices
+ * (#7) and can be deactivated retroactively (#9) by flipping `active`; they are
+ * NEVER hard-deleted, so history is always preserved.
+ *
+ * - `id`        internal surrogate key (referenced by grants).
+ * - `name`      human-readable label shown on the card and in the admin list.
+ * - `imageUrl`  the Vercel Blob URL of the uploaded square image (ADR-0002).
+ *               The image bytes live in Blob; only the URL is stored here.
+ * - `active`    deactivation flag (#9 flips this). This slice only ever creates
+ *               active Stamps and exposes no deactivate/delete path.
+ * - `createdAt` insertion time; orders the admin list (newest first).
+ */
+export const stamps = pgTable("stamps", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: text("name").notNull(),
+  imageUrl: text("image_url").notNull(),
+  active: boolean("active").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+export type Stamp = typeof stamps.$inferSelect;
+export type NewStamp = typeof stamps.$inferInsert;
