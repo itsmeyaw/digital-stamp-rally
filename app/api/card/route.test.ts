@@ -92,9 +92,29 @@ describe("GET /api/card", () => {
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.card.activeStamps).toHaveLength(2);
-    expect(body.card.slots[0]).toBe(stamp1.id);
-    expect(body.card.slots[1]).toBe(stamp2.id);
+    // slots now return SlotData objects, not stamp IDs
+    expect(body.card.slots[0]).toMatchObject({ name: "S1", imageUrl: "https://blob/s1.png" });
+    expect(body.card.slots[1]).toMatchObject({ name: "S2", imageUrl: "https://blob/s2.png" });
     expect(body.card.complete).toBe(false);
+  });
+
+  it("filled slot includes bgColor and textColor from stamps table", async () => {
+    const [user] = await h.db.insert(users).values({ code: "CCC333" }).returning();
+    const [stamp] = await h.db
+      .insert(stamps)
+      .values({ name: "Art", imageUrl: "https://blob/art.png", bgColor: "#FF0000", textColor: "#FFFFFF" })
+      .returning();
+    await h.db.insert(grants).values({ userId: user.id, stampId: stamp.id });
+
+    const res = await getCard(userCookie(user.id));
+    const body = await res.json();
+    expect(body.card.slots[0]).toMatchObject({
+      name: "Art",
+      imageUrl: "https://blob/art.png",
+      bgColor: "#FF0000",
+      textColor: "#FFFFFF",
+    });
+    expect(body.card.slots[1]).toBeNull();
   });
 
   it("non-user session → 403", async () => {
