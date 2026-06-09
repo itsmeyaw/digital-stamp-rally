@@ -33,16 +33,16 @@ export function CollectButton() {
         type="button"
         onClick={onCollect}
         disabled={pending}
-        className="flex items-center justify-center px-5 font-bold text-white border-brutal shadow-hard transition-transform active:translate-y-0.5 disabled:opacity-60"
-        style={{
-          background: "var(--color-primary)",
-          minHeight: "48px",
-        }}
+        className="btn-press flex items-center justify-center border-brutal bg-[var(--color-secondary)] px-5 font-display text-lg uppercase tracking-wide text-white shadow-hard disabled:opacity-60"
+        style={{ minHeight: "56px" }}
       >
-        {pending ? "Creating your card…" : "Start collecting"}
+        {pending ? "Creating your card…" : "Start collecting →"}
       </button>
       {error ? (
-        <p role="alert" className="text-sm text-red-600">
+        <p
+          role="alert"
+          className="border-[3px] border-black bg-[var(--color-danger)] px-3 py-2 text-sm font-bold text-white"
+        >
           {error}
         </p>
       ) : null}

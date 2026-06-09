@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { fieldLabel, fieldInput, fieldSelect, btnPrimary, btnSecondary } from "./field-styles";
 
 /**
  * Admin Users/grants form (issue #8). Lets an Administrator grant or revoke any
@@ -90,13 +91,13 @@ export default function GrantsForm({
   return (
     <div className="flex w-full max-w-sm flex-col gap-6">
       <div className="flex flex-col gap-4">
-        <label className="flex flex-col gap-1 text-left text-sm font-medium">
+        <label className={fieldLabel}>
           Stamp
           <select
             value={stampId}
             onChange={(e) => setStampId(e.target.value)}
             disabled={stamps.length === 0}
-            className="h-11 rounded-lg border border-black/15 px-3 dark:border-white/20 dark:bg-zinc-900"
+            className={fieldSelect}
           >
             {stamps.length === 0 ? (
               <option value="">No stamps — create one first</option>
@@ -109,14 +110,14 @@ export default function GrantsForm({
             )}
           </select>
         </label>
-        <label className="flex flex-col gap-1 text-left text-sm font-medium">
+        <label className={fieldLabel}>
           User code (6 characters)
           <input
             value={userCode}
             onChange={(e) => setUserCode(e.target.value.toUpperCase())}
             maxLength={6}
             placeholder="ABC123"
-            className="h-11 rounded-lg border border-black/15 px-3 uppercase tracking-widest dark:border-white/20 dark:bg-zinc-900"
+            className={`${fieldInput} font-mono uppercase tracking-[0.3em]`}
           />
         </label>
         <div className="flex gap-3">
@@ -124,7 +125,7 @@ export default function GrantsForm({
             <button
               type="submit"
               disabled={submitting !== null || stamps.length === 0 || userCode.length !== 6}
-              className="w-full h-11 rounded-full bg-black px-4 font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-60 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+              className={`${btnPrimary} w-full`}
             >
               {submitting === "grant" ? "Granting…" : "Grant"}
             </button>
@@ -133,7 +134,7 @@ export default function GrantsForm({
             <button
               type="submit"
               disabled={submitting !== null || stamps.length === 0 || userCode.length !== 6}
-              className="w-full h-11 rounded-full border border-black/20 px-4 font-medium text-black transition-colors hover:bg-zinc-100 disabled:opacity-60 dark:border-white/20 dark:text-zinc-50 dark:hover:bg-zinc-800"
+              className={`${btnSecondary} w-full`}
             >
               {submitting === "revoke" ? "Revoking…" : "Revoke"}
             </button>
@@ -142,7 +143,11 @@ export default function GrantsForm({
         {grantMsg && (
           <p
             role="alert"
-            className={`text-sm ${grantMsg.ok ? "text-green-600 dark:text-green-400" : "text-red-600"}`}
+            className={`border-[3px] border-black px-3 py-2 text-sm font-bold ${
+              grantMsg.ok
+                ? "bg-[var(--color-lime)] text-black"
+                : "bg-[var(--color-danger)] text-white"
+            }`}
           >
             Grant: {grantMsg.text}
           </p>
@@ -150,7 +155,11 @@ export default function GrantsForm({
         {revokeMsg && (
           <p
             role="alert"
-            className={`text-sm ${revokeMsg.ok ? "text-green-600 dark:text-green-400" : "text-red-600"}`}
+            className={`border-[3px] border-black px-3 py-2 text-sm font-bold ${
+              revokeMsg.ok
+                ? "bg-[var(--color-lime)] text-black"
+                : "bg-[var(--color-danger)] text-white"
+            }`}
           >
             Revoke: {revokeMsg.text}
           </p>

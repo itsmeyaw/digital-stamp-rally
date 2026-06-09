@@ -4,6 +4,7 @@ import { requireRole } from "@/lib/auth/authorize";
 import { getDb } from "@/lib/db/client";
 import { listStamps } from "@/lib/stamp/stamp";
 import GrantsForm from "../grants-form";
+import { PageHeading, SectionTitle } from "../section";
 
 /**
  * Admin Grants sub-page (/admin/grants).
@@ -21,26 +22,14 @@ export default async function AdminGrantsPage() {
   const stampOptions = stamps.map((s) => ({ id: s.id, name: s.name }));
 
   return (
-    <main className="flex flex-1 flex-col gap-12 bg-zinc-50 px-6 py-12 dark:bg-black">
-      <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
-          Users / grants
-        </h1>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          Grant a stamp to fix a missed scan, or revoke one to correct a
-          mis-scan. Revoking a middle stamp compacts remaining stamps left
-          automatically.
-        </p>
-      </header>
+    <main className="flex flex-1 flex-col gap-10 px-6 py-12">
+      <PageHeading title="Users / grants">
+        Grant a stamp to fix a missed scan, or revoke one to correct a mis-scan.
+        Revoking a middle stamp compacts the remaining stamps automatically.
+      </PageHeading>
 
-      {/* ── Users / grants ─────────────────────────────────────── */}
-      <section aria-labelledby="section-grants" className="flex flex-col gap-4">
-        <h2
-          id="section-grants"
-          className="text-xl font-semibold text-black dark:text-zinc-50"
-        >
-          Grant / revoke
-        </h2>
+      <section aria-labelledby="section-grants" className="flex flex-col gap-5">
+        <SectionTitle id="section-grants">Grant / revoke</SectionTitle>
         <GrantsForm stamps={stampOptions} />
       </section>
     </main>

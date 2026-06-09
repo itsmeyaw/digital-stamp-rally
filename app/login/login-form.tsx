@@ -40,8 +40,8 @@ export default function LoginForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex w-full max-w-xs flex-col gap-4">
-      <label className="flex flex-col gap-1 text-left text-sm font-medium">
+    <form onSubmit={onSubmit} className="flex w-full max-w-xs flex-col gap-5">
+      <label className="flex flex-col gap-1.5 text-left text-xs font-bold uppercase tracking-widest">
         Username
         <input
           name="username"
@@ -49,11 +49,11 @@ export default function LoginForm() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
-          className="h-11 px-3 bg-white"
+          className="h-12 bg-white px-3 font-medium focus:outline-none focus:-translate-y-0.5 focus:shadow-[8px_8px_0px_#0A0A0A] transition-all"
           style={{ border: "var(--border)", boxShadow: "var(--shadow)" }}
         />
       </label>
-      <label className="flex flex-col gap-1 text-left text-sm font-medium">
+      <label className="flex flex-col gap-1.5 text-left text-xs font-bold uppercase tracking-widest">
         Password
         <input
           name="password"
@@ -62,23 +62,27 @@ export default function LoginForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="h-11 px-3 bg-white"
+          className="h-12 bg-white px-3 font-medium focus:outline-none focus:-translate-y-0.5 focus:shadow-[8px_8px_0px_#0A0A0A] transition-all"
           style={{ border: "var(--border)", boxShadow: "var(--shadow)" }}
         />
       </label>
       {error && (
-        <p role="alert" className="text-sm text-red-600">
+        <p
+          role="alert"
+          className="border-[3px] border-black bg-[var(--color-danger)] px-3 py-2 text-sm font-bold text-white"
+        >
           {error}
         </p>
       )}
       <button
         type="submit"
         disabled={submitting}
-        className="flex h-12 items-center justify-center px-5 font-bold text-white disabled:opacity-60"
+        className="btn-press flex h-13 items-center justify-center px-5 font-display text-lg uppercase tracking-wide text-white disabled:opacity-60"
         style={{
           background: "var(--color-primary)",
           border: "var(--border)",
           boxShadow: "var(--shadow)",
+          minHeight: "52px",
         }}
       >
         {submitting ? "Signing in…" : "Sign in"}

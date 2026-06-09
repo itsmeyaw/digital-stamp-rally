@@ -138,32 +138,20 @@ export default function RedeemPage() {
     }
   };
 
-  const statusColor = (): string => {
-    if (!lookup) return "";
-    switch (lookup.status) {
-      case "eligible":
-        return "text-green-600 dark:text-green-400";
-      case "blocked":
-        return "text-yellow-600 dark:text-yellow-400";
-      case "already_redeemed":
-        return "text-zinc-500 dark:text-zinc-400";
-    }
-  };
-
   const canRedeem =
     lookup?.status === "eligible" && !redeemResult?.redeemed;
 
   return (
-    <main className="flex flex-1 flex-col items-center gap-8 bg-[var(--color-bg)] px-6 py-12">
-      <h1 className="text-3xl font-black tracking-tight text-black uppercase">
-        Prize Redemption
+    <main className="flex flex-1 flex-col items-center gap-8 px-6 py-12">
+      <h1 className="font-display text-4xl uppercase text-black">
+        Redeem Prize
       </h1>
 
       {/* Code input */}
       <div className="flex flex-col gap-4 w-full max-w-sm">
         <label
           htmlFor="code-input"
-          className="text-sm font-bold text-black uppercase tracking-wide"
+          className="text-xs font-bold text-black uppercase tracking-widest"
         >
           6-character user code
         </label>
@@ -174,13 +162,13 @@ export default function RedeemPage() {
           value={code}
           onChange={(e) => setCode(e.target.value.toUpperCase())}
           placeholder="XXXXXX"
-          className="border-brutal shadow-hard bg-white px-4 font-mono text-xl uppercase tracking-widest text-black placeholder-zinc-400 focus:outline-none w-full min-h-[48px]"
+          className="border-brutal shadow-hard bg-white px-4 py-3 text-center font-mono text-2xl uppercase tracking-[0.4em] text-black placeholder-zinc-300 focus:outline-none focus:-translate-y-0.5 focus:shadow-hard-lg transition-all w-full min-h-[48px]"
         />
         <button
           type="button"
           disabled={trimmedCode.length !== 6 || loading}
           onClick={handleLookup}
-          className="border-brutal shadow-hard bg-black px-6 font-bold text-white disabled:opacity-40 min-h-[48px] w-full uppercase"
+          className="btn-press border-brutal shadow-hard bg-black px-6 font-display text-lg uppercase tracking-wide text-white disabled:opacity-40 min-h-[48px] w-full"
         >
           Look up
         </button>
@@ -188,10 +176,8 @@ export default function RedeemPage() {
 
       {/* Lookup error */}
       {lookupError && (
-        <div className="border-brutal bg-red-100 px-4 py-3 w-full max-w-sm">
-          <p className="text-sm font-bold text-red-700">
-            {lookupError}
-          </p>
+        <div className="border-brutal bg-[var(--color-danger)] px-4 py-3 w-full max-w-sm">
+          <p className="text-sm font-bold text-white">{lookupError}</p>
         </div>
       )}
 
@@ -203,17 +189,17 @@ export default function RedeemPage() {
             data-testid="redeem-result-card"
             className={`border-brutal shadow-hard px-6 py-5 ${
               lookup.status === "eligible"
-                ? "bg-[#CCFF66]"
+                ? "bg-[var(--color-lime)]"
                 : lookup.status === "already_redeemed"
                   ? "bg-zinc-200"
-                  : "bg-yellow-100"
+                  : "bg-[var(--color-accent)]"
             }`}
           >
-            <p className="text-2xl font-black text-black">
+            <p className="font-display text-3xl uppercase text-black">
               {statusLabel()}
             </p>
             {lookup.status === "already_redeemed" && (
-              <p className="text-sm font-medium text-zinc-600 mt-1">
+              <p className="mt-1 text-sm font-bold text-black/60">
                 This prize has already been claimed.
               </p>
             )}
@@ -226,7 +212,7 @@ export default function RedeemPage() {
               disabled={!canRedeem || loading}
               onClick={handleRedeem}
               style={{ backgroundColor: "#FF6600" }}
-              className="border-brutal shadow-hard px-6 font-bold text-white disabled:opacity-40 disabled:cursor-not-allowed min-h-[48px] w-full uppercase bg-[var(--color-secondary)]"
+              className="btn-press border-brutal shadow-hard px-6 font-display text-lg text-white disabled:opacity-40 disabled:cursor-not-allowed min-h-[48px] w-full uppercase bg-[var(--color-secondary)]"
             >
               {redeemResult?.redeemed ? "Redeemed!" : "Redeem Prize"}
             </button>
@@ -234,22 +220,20 @@ export default function RedeemPage() {
 
           {/* Redeem result feedback */}
           {redeemResult?.redeemed && (
-            <div className="border-brutal bg-[#CCFF66] px-4 py-3">
-              <p className="font-bold text-black">
-                Prize successfully redeemed.
+            <div className="border-brutal shadow-hard bg-[var(--color-lime)] px-4 py-3">
+              <p className="font-display text-lg uppercase text-black">
+                Prize redeemed ✓
               </p>
             </div>
           )}
           {redeemResult?.alreadyRedeemed && (
-            <p className="text-sm font-medium text-zinc-600">
+            <p className="text-sm font-bold text-black/60">
               This user has already redeemed their prize.
             </p>
           )}
           {redeemError && (
-            <div className="border-brutal bg-red-100 px-4 py-3">
-              <p className="text-sm font-bold text-red-700">
-                {redeemError}
-              </p>
+            <div className="border-brutal bg-[var(--color-danger)] px-4 py-3">
+              <p className="text-sm font-bold text-white">{redeemError}</p>
             </div>
           )}
         </div>

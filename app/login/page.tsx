@@ -18,12 +18,20 @@ export default async function LoginPage() {
       className="flex min-h-screen flex-col items-center justify-center gap-8 px-6 py-16 text-center"
       style={{ background: "var(--color-bg)" }}
     >
-      <h1 className="text-3xl font-bold tracking-tight" style={{ color: "var(--color-text)" }}>
-        Staff login
-      </h1>
+      <div className="flex flex-col items-center gap-2">
+        <span className="rotate-2 border-[3px] border-black bg-[var(--color-accent)] px-3 py-1 text-xs font-bold uppercase tracking-[0.25em]">
+          Staff only
+        </span>
+        <h1 className="font-display text-4xl uppercase text-[var(--color-text)]">
+          Sign in
+        </h1>
+      </div>
       <LoginForm />
-      <Link href="/welcome" className="text-sm font-medium underline">
-        Back to welcome
+      <Link
+        href="/welcome"
+        className="text-sm font-bold uppercase tracking-wide underline decoration-2 underline-offset-4"
+      >
+        ← Back to welcome
       </Link>
     </main>
   );

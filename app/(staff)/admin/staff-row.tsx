@@ -49,25 +49,29 @@ export default function StaffRow({
   }
 
   return (
-    <li className="flex flex-col gap-2 rounded-xl border border-black/10 bg-white p-3 dark:border-white/15 dark:bg-zinc-900">
+    <li
+      className={`flex flex-col gap-3 border-brutal bg-white p-4 shadow-hard-sm ${
+        member.active ? "" : "opacity-60"
+      }`}
+    >
       <div className="flex items-center justify-between gap-2">
-        <span className="text-sm font-medium text-black dark:text-zinc-50">
+        <span className="font-display text-base uppercase text-black">
           {member.username}
         </span>
-        <span className="text-xs uppercase tracking-wide text-zinc-500">
+        <span className="border-[3px] border-black bg-[var(--color-accent)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-black">
           {member.role}
-          {!member.active && " · inactive"}
+          {!member.active && " · off"}
         </span>
       </div>
 
       {member.role === "stamper" && member.active && (
-        <label className="flex flex-col gap-1 text-xs text-zinc-600 dark:text-zinc-400">
+        <label className="flex flex-col gap-1 text-xs font-bold uppercase tracking-widest text-black/60">
           Bound stamp
           <select
             defaultValue={member.stampId ?? ""}
             disabled={busy}
             onChange={(e) => patch({ stampId: e.target.value })}
-            className="h-9 rounded-lg border border-black/15 px-2 text-sm dark:border-white/20 dark:bg-zinc-900"
+            className="h-10 border-[3px] border-black bg-white px-2 text-sm font-medium shadow-hard-sm focus:outline-none"
           >
             {stamps.map((s) => (
               <option key={s.id} value={s.id}>
@@ -83,14 +87,17 @@ export default function StaffRow({
           type="button"
           disabled={busy}
           onClick={() => patch({ active: false })}
-          className="self-start rounded-full border border-red-300 px-3 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 disabled:opacity-60 dark:border-red-800/60 dark:hover:bg-red-950/40"
+          className="btn-press self-start border-[3px] border-black bg-[var(--color-danger)] px-3 py-1 text-xs font-bold uppercase tracking-wide text-white shadow-hard-sm disabled:opacity-60"
         >
           Deactivate
         </button>
       )}
 
       {error && (
-        <p role="alert" className="text-xs text-red-600">
+        <p
+          role="alert"
+          className="border-[3px] border-black bg-[var(--color-danger)] px-2 py-1 text-xs font-bold text-white"
+        >
           {error}
         </p>
       )}
