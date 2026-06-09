@@ -43,6 +43,29 @@ describe("validateStampImage", () => {
     if (!result.ok) expect(result.error).toMatch(/square/i);
   });
 
+  it("accepts a near-square image within the default tolerance", () => {
+    // 512x506 is ~1.2% off — looks square, should be accepted.
+    const result = validateStampImage(pngOfSize(512, 506), "image/png");
+    expect(result.ok).toBe(true);
+  });
+
+  it("rejects an image just outside the square tolerance", () => {
+    // 512x480 is ~6.25% off — clearly not square.
+    const result = validateStampImage(pngOfSize(512, 480), "image/png");
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error).toMatch(/square/i);
+  });
+
+  it("requires an exact square when tolerance is 0", () => {
+    process.env.STAMP_IMAGE_SQUARE_TOLERANCE = "0";
+    try {
+      const result = validateStampImage(pngOfSize(512, 506), "image/png");
+      expect(result.ok).toBe(false);
+    } finally {
+      delete process.env.STAMP_IMAGE_SQUARE_TOLERANCE;
+    }
+  });
+
   it("rejects an oversized image", () => {
     process.env.STAMP_IMAGE_MAX_BYTES = "10";
     try {

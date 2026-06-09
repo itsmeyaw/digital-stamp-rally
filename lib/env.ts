@@ -60,6 +60,19 @@ export function stampImageMaxBytes(): number {
 }
 
 /**
+ * Maximum allowed deviation from a perfect square for a Stamp image, as a
+ * fraction of the longer side. Defaults to 0.02 (2%) so images that *look*
+ * square but are off by a few pixels (e.g. 512x506) are accepted, while clearly
+ * rectangular images are still rejected. Configurable via
+ * STAMP_IMAGE_SQUARE_TOLERANCE (0 = require an exact square).
+ */
+export function stampImageSquareTolerance(): number {
+  const raw = process.env.STAMP_IMAGE_SQUARE_TOLERANCE;
+  const parsed = raw !== undefined ? Number(raw) : NaN;
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0.02;
+}
+
+/**
  * Allowed MIME types for a Stamp image. Defaults to PNG/JPEG/WebP. Configurable
  * via STAMP_IMAGE_ALLOWED_TYPES (comma-separated) for deploy-time flexibility.
  */

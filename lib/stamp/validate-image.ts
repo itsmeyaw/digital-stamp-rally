@@ -1,5 +1,9 @@
 import { imageSize } from "image-size";
-import { stampImageMaxBytes, stampImageAllowedTypes } from "@/lib/env";
+import {
+  stampImageMaxBytes,
+  stampImageAllowedTypes,
+  stampImageSquareTolerance,
+} from "@/lib/env";
 
 /**
  * Result of validating a candidate Stamp image. `ok` discriminates the union so
@@ -15,7 +19,8 @@ export type ImageValidationResult =
  * Validate that an uploaded image is acceptable as a Stamp image:
  *   - content type is in the allowed set (env-configurable),
  *   - byte size is within the configured maximum,
- *   - the image is square (width === height).
+ *   - the image is square, allowing a small tolerance so images that look
+ *     square but are off by a few pixels are accepted (env-configurable).
  *
  * Returns a discriminated result rather than throwing so route handlers can map
  * a rejection to a 400 with the human-readable reason.
@@ -52,7 +57,10 @@ export function validateStampImage(
   if (typeof width !== "number" || typeof height !== "number") {
     return { ok: false, error: "Could not read image dimensions." };
   }
-  if (width !== height) {
+  const tolerance = stampImageSquareTolerance();
+  const longer = Math.max(width, height);
+  const deviation = longer === 0 ? 0 : Math.abs(width - height) / longer;
+  if (deviation > tolerance) {
     return {
       ok: false,
       error: `Image must be square; received ${width}x${height}.`,
