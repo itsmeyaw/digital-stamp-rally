@@ -14,12 +14,18 @@ export default async function CollectPage() {
   if (session) redirect(resolveLanding(session));
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-8 bg-zinc-50 px-6 py-16 text-center dark:bg-black">
+    <main
+      className="flex flex-1 flex-col items-center justify-center gap-8 px-6 py-16 text-center"
+      style={{ background: "var(--color-bg)" }}
+    >
       <div className="flex max-w-md flex-col gap-4">
-        <h1 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
+        <h1
+          className="text-3xl font-bold tracking-tight"
+          style={{ color: "var(--color-text)" }}
+        >
           How {eventName()} Stamp Rally works
         </h1>
-        <p className="text-zinc-600 dark:text-zinc-400">
+        <p style={{ color: "#444" }}>
           Visit booths around the event and have your code scanned to collect
           stamps. Fill all 5 slots on your card to complete the rally and claim
           your prize. Your card lives on this device — keep this browser to keep
