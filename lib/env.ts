@@ -22,6 +22,11 @@ export function sessionSecret(): string {
   return required("SESSION_SECRET");
 }
 
+/** Base URL of the app, used for QR deep-link generation. */
+export function baseUrl(): string {
+  return required("NEXT_PUBLIC_BASE_URL");
+}
+
 /** Event name shown on the welcome screen. Falls back to a generic label. */
 export function eventName(): string {
   return process.env.EVENT_NAME ?? "the Event";

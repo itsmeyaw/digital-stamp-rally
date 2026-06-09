@@ -26,6 +26,7 @@ export default defineConfig({
           hookTimeout: 60_000,
           include: ["**/*.test.ts"],
           exclude: ["**/node_modules/**", "**/.next/**", "**/.worktrees/**"],
+          setupFiles: ["./test/setup-env.ts"],
         },
       },
       {
@@ -35,7 +36,7 @@ export default defineConfig({
           environment: "jsdom",
           include: ["**/*.test.tsx"],
           exclude: ["**/node_modules/**", "**/.next/**", "**/.worktrees/**"],
-          setupFiles: ["./test/setup-dom.ts"],
+          setupFiles: ["./test/setup-env.ts", "./test/setup-dom.ts"],
         },
       },
     ],

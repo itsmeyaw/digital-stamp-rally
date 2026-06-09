@@ -4,6 +4,8 @@ import { getSession } from "@/lib/auth/session";
 import { getDb } from "@/lib/db/client";
 import { getUserById } from "@/lib/user/get-user";
 import { getCard } from "@/lib/user/card";
+import { baseUrl } from "@/lib/env";
+import { buildDeepLinkUrl } from "@/lib/user/deep-link";
 import CardPoller from "./CardPoller";
 
 /**
@@ -24,7 +26,8 @@ export default async function CardPage() {
   if (!user) redirect("/welcome");
 
   const card = await getCard(getDb(), session.sub);
-  const qrDataUrl = await QRCode.toDataURL(user.code, { margin: 1, width: 256 });
+  const deepLink = buildDeepLinkUrl(baseUrl(), user.code);
+  const qrDataUrl = await QRCode.toDataURL(deepLink, { margin: 1, width: 256 });
 
   return (
     <main className="flex flex-1 flex-col items-center gap-10 px-6 py-12">
