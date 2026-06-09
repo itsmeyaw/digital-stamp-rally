@@ -9,12 +9,16 @@ import StampForm from "./stamps-form";
 import StamperForm from "./stamper-form";
 import RedeemerForm from "./redeemer-form";
 import StaffRow from "./staff-row";
+import GrantsForm from "./grants-form";
 
 /**
- * Administrator dashboard (ADR-0001: admin -> /admin). Adds the Stamps section
- * (issue #5) and the Stampers/Redeemers sections (issue #6): creation forms plus
- * server-fetched lists with re-assign/deactivate actions. Any visitor without an
- * Admin session is sent back to welcome.
+ * Administrator dashboard (ADR-0001: admin -> /admin). Sectioned layout:
+ *   - Stamps      (issue #5): create + list
+ *   - Stampers    (issue #6): create + list with re-assign/deactivate
+ *   - Redeemers   (issue #6): create + list
+ *   - Users/grants (issue #8): grant or revoke any stamp by 6-char user code
+ *
+ * Any visitor without an Admin session is redirected to /welcome.
  */
 export default async function AdminPage() {
   const session = await getSession();
@@ -28,27 +32,31 @@ export default async function AdminPage() {
   const redeemers = staff.filter((s) => s.role === "redeemer");
 
   return (
-    <main className="flex flex-1 flex-col gap-10 bg-zinc-50 px-6 py-12 dark:bg-black">
+    <main className="flex flex-1 flex-col gap-12 bg-zinc-50 px-6 py-12 dark:bg-black">
       <header className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
           Admin dashboard
         </h1>
         <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          Create and review Stamps, Stampers, and Redeemers.
+          Manage Stamps, Stampers, Redeemers, and User grants.
         </p>
       </header>
 
-      <section className="flex flex-col gap-4">
-        <h2 className="text-lg font-medium text-black dark:text-zinc-50">
+      {/* ── Stamps ─────────────────────────────────────────────── */}
+      <section aria-labelledby="section-stamps" className="flex flex-col gap-4">
+        <h2
+          id="section-stamps"
+          className="text-xl font-semibold text-black dark:text-zinc-50"
+        >
+          Stamps
+        </h2>
+        <h3 className="text-base font-medium text-black dark:text-zinc-50">
           New stamp
-        </h2>
+        </h3>
         <StampForm />
-      </section>
-
-      <section className="flex flex-col gap-4">
-        <h2 className="text-lg font-medium text-black dark:text-zinc-50">
-          Stamps ({stamps.length})
-        </h2>
+        <h3 className="text-base font-medium text-black dark:text-zinc-50">
+          All stamps ({stamps.length})
+        </h3>
         {stamps.length === 0 ? (
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
             No stamps yet. Create the first one above.
@@ -80,13 +88,20 @@ export default async function AdminPage() {
         )}
       </section>
 
-      <section className="flex flex-col gap-4">
-        <h2 className="text-lg font-medium text-black dark:text-zinc-50">
-          New stamper
+      {/* ── Stampers ───────────────────────────────────────────── */}
+      <section aria-labelledby="section-stampers" className="flex flex-col gap-4">
+        <h2
+          id="section-stampers"
+          className="text-xl font-semibold text-black dark:text-zinc-50"
+        >
+          Stampers
         </h2>
+        <h3 className="text-base font-medium text-black dark:text-zinc-50">
+          New stamper
+        </h3>
         <StamperForm stamps={stampOptions} />
         <h3 className="text-base font-medium text-black dark:text-zinc-50">
-          Stampers ({stampers.length})
+          All stampers ({stampers.length})
         </h3>
         {stampers.length === 0 ? (
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
@@ -101,13 +116,20 @@ export default async function AdminPage() {
         )}
       </section>
 
-      <section className="flex flex-col gap-4">
-        <h2 className="text-lg font-medium text-black dark:text-zinc-50">
-          New redeemer
+      {/* ── Redeemers ──────────────────────────────────────────── */}
+      <section aria-labelledby="section-redeemers" className="flex flex-col gap-4">
+        <h2
+          id="section-redeemers"
+          className="text-xl font-semibold text-black dark:text-zinc-50"
+        >
+          Redeemers
         </h2>
+        <h3 className="text-base font-medium text-black dark:text-zinc-50">
+          New redeemer
+        </h3>
         <RedeemerForm />
         <h3 className="text-base font-medium text-black dark:text-zinc-50">
-          Redeemers ({redeemers.length})
+          All redeemers ({redeemers.length})
         </h3>
         {redeemers.length === 0 ? (
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
@@ -120,6 +142,22 @@ export default async function AdminPage() {
             ))}
           </ul>
         )}
+      </section>
+
+      {/* ── Users / grants ─────────────────────────────────────── */}
+      <section aria-labelledby="section-grants" className="flex flex-col gap-4">
+        <h2
+          id="section-grants"
+          className="text-xl font-semibold text-black dark:text-zinc-50"
+        >
+          Users / grants
+        </h2>
+        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          Grant a stamp to fix a missed scan, or revoke one to correct a
+          mis-scan. Revoking a middle stamp compacts remaining stamps left
+          automatically.
+        </p>
+        <GrantsForm stamps={stampOptions} />
       </section>
     </main>
   );
