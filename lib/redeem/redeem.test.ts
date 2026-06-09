@@ -156,10 +156,8 @@ describe("lookupUser", () => {
     // Completion was captured when all 5 were active
     await seedCompletion(user.id);
     // Now deactivate one stamp — live card drops to 4
-    await h.db.update(stamps).set({ active: false }).where(
-      // @ts-expect-error drizzle eq import in test
-      (await import("drizzle-orm")).eq(stamps.id, s5.id),
-    );
+    const { eq } = await import("drizzle-orm");
+    await h.db.update(stamps).set({ active: false }).where(eq(stamps.id, s5.id));
 
     const result = await lookupUser(h.db, "JKL012");
 
