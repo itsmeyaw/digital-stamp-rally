@@ -31,7 +31,8 @@ import {
 export type GrantErrorCode =
   | "user_not_found"
   | "stamper_not_bound"
-  | "stamp_not_found";
+  | "stamp_not_found"
+  | "stamp_inactive";
 
 export class GrantError extends Error {
   constructor(public readonly code: GrantErrorCode) {
@@ -110,6 +111,12 @@ export async function grantStamp(
     stampId: s.id,
     active: s.active,
   }));
+
+  // Check that the bound stamp is still active
+  const stampToGrant = allStamps.find((s) => s.id === stampId);
+  if (stampToGrant && !stampToGrant.active) {
+    throw new GrantError("stamp_inactive");
+  }
 
   const existingGrants = await db
     .select()

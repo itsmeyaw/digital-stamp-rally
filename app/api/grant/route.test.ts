@@ -190,4 +190,24 @@ describe("POST /api/grant", () => {
     });
     expect(res.status).toBe(400);
   });
+
+  it("stamper bound to deactivated stamp → 400 stamp_inactive", async () => {
+    const stamp = await seedStamp("OldStamp");
+    const stamper = await seedStamper(stamp.id);
+    const user = await seedUser("PQR678");
+
+    // Deactivate the stamp
+    await h.db
+      .update(stamps)
+      .set({ active: false })
+      .where((await import("drizzle-orm")).eq(stamps.id, stamp.id));
+
+    const res = await postGrant({
+      cookie: stamperCookie(stamper.id),
+      body: { userCode: user.code },
+    });
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.error).toBe("stamp_inactive");
+  });
 });
