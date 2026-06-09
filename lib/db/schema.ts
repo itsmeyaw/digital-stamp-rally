@@ -5,6 +5,7 @@ import {
   text,
   timestamp,
   boolean,
+  unique,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -91,3 +92,50 @@ export const stamps = pgTable("stamps", {
 
 export type Stamp = typeof stamps.$inferSelect;
 export type NewStamp = typeof stamps.$inferInsert;
+
+/**
+ * A grant: a User has collected a specific Stamp (issue #7). The combination
+ * of (userId, stampId) is unique — a User cannot hold the same Stamp twice;
+ * a duplicate grant attempt is a no-op (ADR-0003). `acquiredAt` records when
+ * the Stamp was collected; the display order on the card is derived from this.
+ */
+export const grants = pgTable(
+  "grants",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id),
+    stampId: uuid("stamp_id")
+      .notNull()
+      .references(() => stamps.id),
+    acquiredAt: timestamp("acquired_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [unique("grants_user_stamp_uniq").on(t.userId, t.stampId)],
+);
+
+export type Grant = typeof grants.$inferSelect;
+export type NewGrant = typeof grants.$inferInsert;
+
+/**
+ * A write-once Completion record: the first instant a User reaches 5 distinct
+ * active Stamps (ADR-0004). UNIQUE on userId ensures a User can never have more
+ * than one Completion row regardless of re-crossings (see crossesCompletion in
+ * lib/domain/card.ts). Written inside the same transaction that created the
+ * 5th grant, using INSERT … ON CONFLICT DO NOTHING.
+ */
+export const completions = pgTable("completions", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: uuid("user_id")
+    .notNull()
+    .unique()
+    .references(() => users.id),
+  completedAt: timestamp("completed_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+export type Completion = typeof completions.$inferSelect;
+export type NewCompletion = typeof completions.$inferInsert;
