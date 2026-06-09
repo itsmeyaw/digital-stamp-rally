@@ -1,22 +1,28 @@
 "use client";
 
 /**
- * Redeemer scan screen (issue #10).
+ * Redeemer scan screen (issue #10, #27).
  *
  * A Redeemer (or Administrator) enters a User's 6-character code, looks them
  * up, and — if eligible — redeems their prize exactly once.
  *
+ * Deep-link support (issue #27):
+ *   When the page is opened with ?code=XXXXXX (e.g. from a native-camera QR
+ *   scan), the code is normalised and the GET lookup fires automatically on
+ *   mount. The POST redemption still requires an explicit button tap.
+ *
  * Status display:
- *   eligible      → "5/5 — eligible"         + Redeem button enabled
- *   blocked       → "N/5 — blocked"           + Redeem button disabled
- *   already_redeemed → "Already redeemed"     + Redeem button disabled
+ *   eligible         → "5/5 — eligible"       + Redeem button enabled
+ *   blocked          → "N/5 — blocked"         + Redeem button disabled
+ *   already_redeemed → "Already redeemed"      + Redeem button disabled
  *
  * The page itself is a client component so it can hold the lookup/redeem state
  * without a server round-trip framework. Auth is enforced server-side on the
  * API route; if the session is somehow missing the API returns 403 and the UI
  * shows an error.
  */
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 type RedeemStatus = "eligible" | "blocked" | "already_redeemed";
 
@@ -48,23 +54,32 @@ export default function RedeemPage() {
   const [redeemError, setRedeemError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const searchParams = useSearchParams();
+  const prefilledCode = searchParams.get("code");
+
   const trimmedCode = code.trim().toUpperCase();
 
-  const handleLookup = async () => {
-    if (trimmedCode.length !== 6) return;
+  /**
+   * Core lookup logic — takes the code directly so it can be called from both
+   * the manual "Look up" button (which uses `trimmedCode` state) and from the
+   * mount effect (which passes the URL param before state has settled).
+   */
+  const lookupByCode = async (lookupCode: string) => {
+    const normalized = lookupCode.trim().toUpperCase();
+    if (normalized.length !== 6) return;
     setLoading(true);
     setLookup(null);
     setLookupError(null);
     setRedeemResult(null);
     setRedeemError(null);
     try {
-      const res = await fetch(`/api/redeem?code=${encodeURIComponent(trimmedCode)}`);
+      const res = await fetch(`/api/redeem?code=${encodeURIComponent(normalized)}`);
       if (res.status === 403) {
         setLookupError("Not authorized. Please log in as a Redeemer.");
         return;
       }
       if (res.status === 404) {
-        setLookupError("User not found. Check the code and try again.");
+        setLookupError("User not found — check the code.");
         return;
       }
       if (!res.ok) {
@@ -80,6 +95,18 @@ export default function RedeemPage() {
       setLoading(false);
     }
   };
+
+  const handleLookup = () => lookupByCode(trimmedCode);
+
+  // Auto-lookup when the page is opened with ?code= (e.g. native-camera deep link)
+  useEffect(() => {
+    if (prefilledCode) {
+      const normalized = prefilledCode.trim().toUpperCase();
+      setCode(normalized);
+      lookupByCode(normalized);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefilledCode]);
 
   const handleRedeem = async () => {
     if (!lookup || lookup.status !== "eligible") return;
