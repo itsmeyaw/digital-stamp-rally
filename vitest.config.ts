@@ -14,7 +14,7 @@ export default defineConfig({
     hookTimeout: 60_000,
     globals: false,
     include: ["**/*.test.ts"],
-    exclude: ["**/node_modules/**", "**/.next/**", "**/.worktrees/**"],
+    exclude: ["**/node_modules/**", "**/.next/**", "**/.worktrees/**", "**/.claude/**"],
   },
   resolve: {
     alias: {
