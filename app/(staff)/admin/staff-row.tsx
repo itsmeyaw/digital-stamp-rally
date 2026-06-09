@@ -82,18 +82,25 @@ export default function StaffRow({
         )
       }
 
-      {
-        member.active && (
-          <button
-            type="button"
-            disabled={busy}
-            onClick={() => patch({ active: false })}
-            className="btn-press self-start border-[3px] border-black bg-[var(--color-danger)] px-3 py-1 text-xs font-bold uppercase tracking-wide text-base shadow-hard-sm disabled:opacity-60"
-          >
-            Deactivate
-          </button>
-        )
-      }
+      {member.active ? (
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => patch({ active: false })}
+          className="btn-press self-start border-[3px] border-black bg-[var(--color-danger)] px-3 py-1 text-xs font-bold uppercase tracking-wide text-base shadow-hard-sm disabled:opacity-60"
+        >
+          Deactivate
+        </button>
+      ) : (
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => patch({ active: true })}
+          className="btn-press self-start border-[3px] border-black bg-[var(--color-accent)] px-3 py-1 text-xs font-bold uppercase tracking-wide text-base shadow-hard-sm disabled:opacity-60"
+        >
+          Reactivate
+        </button>
+      )}
 
       {
         error && (

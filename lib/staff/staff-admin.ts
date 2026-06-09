@@ -147,6 +147,24 @@ export async function deactivateStaff(
 }
 
 /**
+ * Reactivate a previously deactivated staff account: flips `active` back to
+ * true so the account can log in again. Rejects an unknown staff id
+ * (`staff_not_found`).
+ */
+export async function reactivateStaff(
+  db: Database,
+  input: { staffId: string },
+): Promise<Staff> {
+  const [row] = await db
+    .update(staff)
+    .set({ active: true })
+    .where(eq(staff.id, input.staffId))
+    .returning();
+  if (!row) throw new StaffAdminError("staff_not_found");
+  return row;
+}
+
+/**
  * List the manageable staff accounts (Stampers and Redeemers) for the admin
  * dashboard, newest first. Admins are excluded — they are not managed here.
  * Deactivated accounts are still listed (history is preserved).
