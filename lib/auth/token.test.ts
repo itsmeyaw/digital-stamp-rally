@@ -54,4 +54,41 @@ describe("session token", () => {
     expect(verifyToken("garbage", { secret: SECRET })).toBeNull();
     expect(verifyToken("a.b.c", { secret: SECRET })).toBeNull();
   });
+
+  it("round-trips staff role + subject claims for each staff role", () => {
+    for (const role of ["stamper", "redeemer", "admin"] as const) {
+      const token = signToken(
+        { sub: `staff-${role}`, role },
+        { secret: SECRET, ttlSeconds: 3600 },
+      );
+      const claims = verifyToken(token, { secret: SECRET });
+      expect(claims).not.toBeNull();
+      expect(claims!.role).toBe(role);
+      expect(claims!.sub).toBe(`staff-${role}`);
+    }
+  });
+
+  it("rejects a tampered staff token (privilege escalation attempt)", () => {
+    const token = signToken(
+      { sub: "staff-1", role: "stamper" },
+      { secret: SECRET, ttlSeconds: 3600 },
+    );
+    const [payload, sig] = token.split(".");
+    const tampered = payload.slice(0, -1) + (payload.endsWith("A") ? "B" : "A");
+    expect(verifyToken(`${tampered}.${sig}`, { secret: SECRET })).toBeNull();
+  });
+
+  it("rejects an expired admin token", () => {
+    const issuedAt = 2_000_000;
+    const token = signToken(
+      { sub: "admin-1", role: "admin" },
+      { secret: SECRET, ttlSeconds: 60, now: issuedAt },
+    );
+    expect(
+      verifyToken(token, { secret: SECRET, now: issuedAt + 61 }),
+    ).toBeNull();
+    expect(
+      verifyToken(token, { secret: SECRET, now: issuedAt + 59 }),
+    ).not.toBeNull();
+  });
 });
