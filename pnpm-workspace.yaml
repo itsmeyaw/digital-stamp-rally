@@ -3,6 +3,8 @@ onlyBuiltDependencies:
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+verifyDepsBeforeRun: false
 allowBuilds:
   esbuild: set this to true or false
-verifyDepsBeforeRun: false
+  sharp: set this to true or false
+  unrs-resolver: set this to true or false

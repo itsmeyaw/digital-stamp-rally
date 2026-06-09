@@ -33,7 +33,11 @@ export function CollectButton() {
         type="button"
         onClick={onCollect}
         disabled={pending}
-        className="flex h-12 items-center justify-center rounded-full bg-black px-5 font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-60 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+        className="flex items-center justify-center px-5 font-bold text-white border-brutal shadow-hard transition-transform active:translate-y-0.5 disabled:opacity-60"
+        style={{
+          background: "var(--color-primary)",
+          minHeight: "48px",
+        }}
       >
         {pending ? "Creating your card…" : "Start collecting"}
       </button>
