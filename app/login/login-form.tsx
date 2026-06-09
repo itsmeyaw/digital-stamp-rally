@@ -49,7 +49,8 @@ export default function LoginForm() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
-          className="h-11 rounded-lg border border-black/15 px-3 dark:border-white/20 dark:bg-zinc-900"
+          className="h-11 px-3 bg-white"
+          style={{ border: "var(--border)", boxShadow: "var(--shadow)" }}
         />
       </label>
       <label className="flex flex-col gap-1 text-left text-sm font-medium">
@@ -61,7 +62,8 @@ export default function LoginForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="h-11 rounded-lg border border-black/15 px-3 dark:border-white/20 dark:bg-zinc-900"
+          className="h-11 px-3 bg-white"
+          style={{ border: "var(--border)", boxShadow: "var(--shadow)" }}
         />
       </label>
       {error && (
@@ -72,7 +74,12 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="flex h-12 items-center justify-center rounded-full bg-black px-5 font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-60 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+        className="flex h-12 items-center justify-center px-5 font-bold text-white disabled:opacity-60"
+        style={{
+          background: "var(--color-primary)",
+          border: "var(--border)",
+          boxShadow: "var(--shadow)",
+        }}
       >
         {submitting ? "Signing in…" : "Sign in"}
       </button>

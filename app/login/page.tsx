@@ -14,8 +14,11 @@ export default async function LoginPage() {
   if (session) redirect(resolveLanding(session));
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-8 bg-zinc-50 px-6 py-16 text-center dark:bg-black">
-      <h1 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
+    <main
+      className="flex min-h-screen flex-col items-center justify-center gap-8 px-6 py-16 text-center"
+      style={{ background: "var(--color-bg)" }}
+    >
+      <h1 className="text-3xl font-bold tracking-tight" style={{ color: "var(--color-text)" }}>
         Staff login
       </h1>
       <LoginForm />
