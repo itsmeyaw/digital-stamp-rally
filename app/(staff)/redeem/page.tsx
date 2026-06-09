@@ -154,79 +154,103 @@ export default function RedeemPage() {
     lookup?.status === "eligible" && !redeemResult?.redeemed;
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-6 bg-zinc-50 px-6 py-16 text-center dark:bg-black">
-      <h1 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
+    <main className="flex flex-1 flex-col items-center gap-8 bg-[var(--color-bg)] px-6 py-12">
+      <h1 className="text-3xl font-black tracking-tight text-black uppercase">
         Prize Redemption
       </h1>
 
       {/* Code input */}
-      <div className="flex flex-col gap-3 w-full max-w-xs">
+      <div className="flex flex-col gap-4 w-full max-w-sm">
         <label
           htmlFor="code-input"
-          className="text-sm font-medium text-zinc-700 dark:text-zinc-300 text-left"
+          className="text-sm font-bold text-black uppercase tracking-wide"
         >
           6-character user code
         </label>
-        <div className="flex gap-2">
-          <input
-            id="code-input"
-            type="text"
-            maxLength={6}
-            value={code}
-            onChange={(e) => setCode(e.target.value.toUpperCase())}
-            placeholder="XXXXXX"
-            className="flex-1 rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm font-mono uppercase tracking-widest text-black shadow-sm focus:outline-none focus:ring-2 focus:ring-black dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-          />
-          <button
-            type="button"
-            disabled={trimmedCode.length !== 6 || loading}
-            onClick={handleLookup}
-            className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white disabled:opacity-40 dark:bg-zinc-100 dark:text-black"
-          >
-            Lookup
-          </button>
-        </div>
+        <input
+          id="code-input"
+          type="text"
+          maxLength={6}
+          value={code}
+          onChange={(e) => setCode(e.target.value.toUpperCase())}
+          placeholder="XXXXXX"
+          className="border-brutal shadow-hard bg-white px-4 font-mono text-xl uppercase tracking-widest text-black placeholder-zinc-400 focus:outline-none w-full min-h-[48px]"
+        />
+        <button
+          type="button"
+          disabled={trimmedCode.length !== 6 || loading}
+          onClick={handleLookup}
+          className="border-brutal shadow-hard bg-black px-6 font-bold text-white disabled:opacity-40 min-h-[48px] w-full uppercase"
+        >
+          Look up
+        </button>
       </div>
 
       {/* Lookup error */}
       {lookupError && (
-        <p className="max-w-xs text-sm text-red-600 dark:text-red-400">
-          {lookupError}
-        </p>
+        <div className="border-brutal bg-red-100 px-4 py-3 w-full max-w-sm">
+          <p className="text-sm font-bold text-red-700">
+            {lookupError}
+          </p>
+        </div>
       )}
 
       {/* Status display */}
       {lookup && (
-        <div className="flex flex-col gap-4 w-full max-w-xs">
-          <p className={`text-xl font-semibold ${statusColor()}`}>
-            {statusLabel()}
-          </p>
-
-          {/* Redeem button */}
-          <button
-            type="button"
-            disabled={!canRedeem || loading}
-            onClick={handleRedeem}
-            className="w-full rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-40 disabled:cursor-not-allowed"
+        <div className="flex flex-col gap-4 w-full max-w-sm">
+          {/* Result card */}
+          <div
+            data-testid="redeem-result-card"
+            className={`border-brutal shadow-hard px-6 py-5 ${
+              lookup.status === "eligible"
+                ? "bg-[#CCFF66]"
+                : lookup.status === "already_redeemed"
+                  ? "bg-zinc-200"
+                  : "bg-yellow-100"
+            }`}
           >
-            {redeemResult?.redeemed ? "Redeemed!" : "Redeem Prize"}
-          </button>
+            <p className="text-2xl font-black text-black">
+              {statusLabel()}
+            </p>
+            {lookup.status === "already_redeemed" && (
+              <p className="text-sm font-medium text-zinc-600 mt-1">
+                This prize has already been claimed.
+              </p>
+            )}
+          </div>
+
+          {/* Redeem button — only shown when eligible */}
+          {lookup.status === "eligible" && (
+            <button
+              type="button"
+              disabled={!canRedeem || loading}
+              onClick={handleRedeem}
+              style={{ backgroundColor: "#FF6600" }}
+              className="border-brutal shadow-hard px-6 font-bold text-white disabled:opacity-40 disabled:cursor-not-allowed min-h-[48px] w-full uppercase bg-[var(--color-secondary)]"
+            >
+              {redeemResult?.redeemed ? "Redeemed!" : "Redeem Prize"}
+            </button>
+          )}
 
           {/* Redeem result feedback */}
           {redeemResult?.redeemed && (
-            <p className="text-sm text-green-600 dark:text-green-400">
-              Prize successfully redeemed.
-            </p>
+            <div className="border-brutal bg-[#CCFF66] px-4 py-3">
+              <p className="font-bold text-black">
+                Prize successfully redeemed.
+              </p>
+            </div>
           )}
           {redeemResult?.alreadyRedeemed && (
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-sm font-medium text-zinc-600">
               This user has already redeemed their prize.
             </p>
           )}
           {redeemError && (
-            <p className="text-sm text-red-600 dark:text-red-400">
-              {redeemError}
-            </p>
+            <div className="border-brutal bg-red-100 px-4 py-3">
+              <p className="text-sm font-bold text-red-700">
+                {redeemError}
+              </p>
+            </div>
           )}
         </div>
       )}

@@ -28,11 +28,11 @@ export default async function ScanPage() {
   // If the stamper has no bound stamp, show a degraded UI
   if (!stamperRow?.stampId) {
     return (
-      <main className="flex flex-1 flex-col items-center justify-center gap-4 bg-zinc-50 px-6 py-16 text-center dark:bg-black">
-        <h1 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
+      <main className="flex flex-1 flex-col items-center justify-center gap-4 bg-[var(--color-bg)] px-6 py-16 text-center">
+        <h1 className="text-3xl font-black tracking-tight text-black uppercase">
           Scan
         </h1>
-        <p className="max-w-sm text-zinc-600 dark:text-zinc-400">
+        <p className="max-w-sm text-zinc-600">
           Your account has no bound stamp. Please contact an administrator.
         </p>
       </main>
@@ -47,11 +47,11 @@ export default async function ScanPage() {
 
   if (!stamp) {
     return (
-      <main className="flex flex-1 flex-col items-center justify-center gap-4 bg-zinc-50 px-6 py-16 text-center dark:bg-black">
-        <h1 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
+      <main className="flex flex-1 flex-col items-center justify-center gap-4 bg-[var(--color-bg)] px-6 py-16 text-center">
+        <h1 className="text-3xl font-black tracking-tight text-black uppercase">
           Scan
         </h1>
-        <p className="max-w-sm text-zinc-600 dark:text-zinc-400">
+        <p className="max-w-sm text-zinc-600">
           Bound stamp not found. Please contact an administrator.
         </p>
       </main>
@@ -59,8 +59,8 @@ export default async function ScanPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col items-center gap-8 bg-zinc-50 px-6 py-12 dark:bg-black">
-      <h1 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
+    <main className="flex flex-1 flex-col items-center gap-8 bg-[var(--color-bg)] px-6 py-12">
+      <h1 className="text-3xl font-black tracking-tight text-black uppercase">
         Scan
       </h1>
       <ScanClient stampName={stamp.name} stampImageUrl={stamp.imageUrl} />
