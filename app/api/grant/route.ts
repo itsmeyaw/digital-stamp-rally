@@ -51,6 +51,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           return NextResponse.json({ error: err.code }, { status: 400 });
         case "stamp_not_found":
           return NextResponse.json({ error: err.code }, { status: 400 });
+        case "stamp_inactive":
+          return NextResponse.json({ error: err.code }, { status: 400 });
       }
     }
     throw err;
