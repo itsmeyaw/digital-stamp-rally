@@ -33,3 +33,17 @@ export function sessionTtlSeconds(): number {
   const parsed = raw ? Number(raw) : NaN;
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 60 * 60 * 24 * 30;
 }
+
+/**
+ * Deploy credentials for the first Administrator, consumed by the seed step
+ * (scripts/seed-admin.ts -> seedAdmin). Required only when running the seed;
+ * read lazily so the rest of the app never needs them set.
+ */
+export function adminUsername(): string {
+  return required("ADMIN_USERNAME");
+}
+
+/** Plaintext password for the seeded first Administrator (hashed on seed). */
+export function adminPassword(): string {
+  return required("ADMIN_PASSWORD");
+}
