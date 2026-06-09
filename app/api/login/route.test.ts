@@ -27,6 +27,12 @@ beforeAll(async () => {
       passwordHash: await hashPassword("admin-pw"),
       role: "admin",
     },
+    {
+      username: "gone",
+      passwordHash: await hashPassword("gone-pw"),
+      role: "stamper",
+      active: false,
+    },
   ]);
 });
 
@@ -83,6 +89,12 @@ describe("POST /api/login", () => {
 
   it("rejects a wrong password with 401 and no cookie", async () => {
     const res = await postLogin({ username: "admin1", password: "nope" });
+    expect(res.status).toBe(401);
+    expect(cookieValue(res)).toBeNull();
+  });
+
+  it("rejects a deactivated account with 401 and no cookie", async () => {
+    const res = await postLogin({ username: "gone", password: "gone-pw" });
     expect(res.status).toBe(401);
     expect(cookieValue(res)).toBeNull();
   });

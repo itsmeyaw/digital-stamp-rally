@@ -15,6 +15,10 @@ import type { Role } from "@/lib/auth/token";
  * and returns the role-based landing path (resolveLanding) so the client can
  * navigate. On bad credentials returns 401 with NO cookie. Username and
  * password are never echoed back.
+ *
+ * A deactivated account (`active = false`, #6) is treated exactly like bad
+ * credentials: 401, no cookie. This is the auth-side enforcement of "a
+ * deactivated Stamper/Redeemer can no longer log in".
  */
 export async function POST(req: Request): Promise<NextResponse> {
   let body: unknown;
@@ -40,7 +44,7 @@ export async function POST(req: Request): Promise<NextResponse> {
   const ok = staff
     ? await verifyPassword(password, staff.passwordHash)
     : false;
-  if (!staff || !ok) {
+  if (!staff || !ok || !staff.active) {
     return NextResponse.json({ error: "invalid credentials" }, { status: 401 });
   }
 
