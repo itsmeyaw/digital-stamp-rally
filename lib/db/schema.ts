@@ -139,3 +139,24 @@ export const completions = pgTable("completions", {
 
 export type Completion = typeof completions.$inferSelect;
 export type NewCompletion = typeof completions.$inferInsert;
+
+/**
+ * A write-once Redemption record: the moment a Redeemer redeems a User's prize
+ * (issue #10). UNIQUE on userId ensures a User can never be redeemed twice.
+ * Written via INSERT … ON CONFLICT DO NOTHING so concurrent attempts are safe.
+ * Eligibility is gated on a Completion row existing for the User — so a User
+ * who completed and later had a Stamp revoked still remains eligible (ADR-0004).
+ */
+export const redemptions = pgTable("redemptions", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: uuid("user_id")
+    .notNull()
+    .unique()
+    .references(() => users.id),
+  redeemedAt: timestamp("redeemed_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+export type Redemption = typeof redemptions.$inferSelect;
+export type NewRedemption = typeof redemptions.$inferInsert;
