@@ -28,12 +28,19 @@ function token(role: Role): string {
   return signToken({ sub: `${role}-1`, role }, { secret: SECRET, ttlSeconds: 3600 });
 }
 
-function form(name: string | null, image: Uint8Array | null, type = "image/png"): FormData {
+function form(
+  name: string | null,
+  image: Uint8Array | null,
+  type = "image/png",
+  extra?: { bgColor?: string; textColor?: string },
+): FormData {
   const fd = new FormData();
   if (name !== null) fd.set("name", name);
   if (image !== null) {
     fd.set("image", new Blob([image.buffer as ArrayBuffer], { type }), "stamp.png");
   }
+  if (extra?.bgColor !== undefined) fd.set("bgColor", extra.bgColor);
+  if (extra?.textColor !== undefined) fd.set("textColor", extra.textColor);
   return fd;
 }
 
@@ -131,6 +138,25 @@ describe("POST /api/admin/stamps", () => {
   it("rejects an unauthenticated request with 403", async () => {
     const res = await postStamp({ fd: form("Nope", png(200, 200)) });
     expect(res.status).toBe(403);
+  });
+
+  it("uses default bgColor and textColor when not provided", async () => {
+    const res = await postStamp({ role: "admin", fd: form("Default", png(200, 200)) });
+    expect(res.status).toBe(201);
+    const body = await res.json();
+    expect(body.bgColor).toBe("#0057FF");
+    expect(body.textColor).toBe("#FFFFFF");
+  });
+
+  it("persists explicit bgColor and textColor when provided", async () => {
+    const res = await postStamp({
+      role: "admin",
+      fd: form("Custom", png(200, 200), "image/png", { bgColor: "#FF0000", textColor: "#000000" }),
+    });
+    expect(res.status).toBe(201);
+    const body = await res.json();
+    expect(body.bgColor).toBe("#FF0000");
+    expect(body.textColor).toBe("#000000");
   });
 });
 

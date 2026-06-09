@@ -43,6 +43,13 @@
       "when": 1781005120012,
       "tag": "0005_slow_jubilee",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1781010112955,
+      "tag": "0006_smart_corsair",
+      "breakpoints": true
     }
   ]
 }
