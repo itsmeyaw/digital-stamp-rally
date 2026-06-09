@@ -72,7 +72,7 @@ export default function StampForm() {
     <form
       aria-label="Create stamp"
       onSubmit={onSubmit}
-      className="flex w-full max-w-sm flex-col gap-4"
+      className="flex w-full flex-col gap-4"
     >
       <label className={fieldLabel}>
         Name

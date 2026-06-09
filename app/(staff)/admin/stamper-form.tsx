@@ -52,7 +52,7 @@ export default function StamperForm({
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex w-full max-w-sm flex-col gap-4">
+    <form onSubmit={onSubmit} className="flex w-full flex-col gap-4">
       <label className={fieldLabel}>
         Username
         <input

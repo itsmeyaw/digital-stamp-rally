@@ -1,0 +1,26 @@
+- generic [active] [ref=e1]:
+  - main [ref=e3]:
+    - heading "Your card" [level=1] [ref=e4]
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]: Progress
+        - generic [ref=e8]:
+          - text: "0"
+          - generic [ref=e9]: /5
+      - list "stamp slots" [ref=e10]:
+        - listitem [ref=e11]:
+          - generic [ref=e12]: "1"
+        - listitem [ref=e13]:
+          - generic [ref=e14]: "2"
+        - listitem [ref=e15]:
+          - generic [ref=e16]: "3"
+        - listitem [ref=e17]:
+          - generic [ref=e18]: "4"
+        - listitem [ref=e19]:
+          - generic [ref=e20]: "5"
+    - generic [ref=e21]:
+      - img "QR code for K5TSPD" [ref=e23]
+      - paragraph [ref=e24]: K5TSPD
+      - paragraph [ref=e25]: Show this to a booth to collect a stamp.
+  - button "Open Next.js Dev Tools" [ref=e31] [cursor=pointer]:
+    - img [ref=e32]

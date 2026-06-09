@@ -25,6 +25,7 @@
 @theme inline {
   --font-sans: var(--font-space-grotesk);
   --font-display: var(--font-archivo-black);
+  --max-width-app: 720px;
 }
 
 body {
@@ -35,6 +36,16 @@ body {
   color: var(--color-text);
   font-family: var(--font-space-grotesk), sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+/* ── App frame: lateral borders when viewport exceeds the max width ─────── */
+@media (min-width: 721px) {
+  .app-frame {
+    border-left-width: var(--border-w);
+    border-left-style: solid;
+    border-right-width: var(--border-w);
+    border-right-style: solid;
+  }
 }
 
 /* ── Core surface utilities ───────────────────────────────────────────────── */

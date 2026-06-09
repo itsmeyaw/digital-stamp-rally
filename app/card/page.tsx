@@ -40,7 +40,7 @@ export default async function CardPage() {
 
       {/* QR code — a punched ticket stub the booth scans. */}
       <div className="flex flex-col items-center gap-3">
-        <div className="border-brutal bg-white p-3 shadow-hard-lg">
+        <div className="border-brutal bg-white p-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={qrDataUrl}

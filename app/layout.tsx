@@ -27,9 +27,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${archivoBlack.variable} h-full antialiased`}
+      className={`${spaceGrotesk.variable} ${archivoBlack.variable} h-screen antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-screen flex flex-col">
+        <div className="app-frame mx-auto w-full max-w-app flex flex-col flex-1">{children}</div>
+      </body>
     </html>
   );
 }

@@ -89,7 +89,7 @@ export default function GrantsForm({
   }
 
   return (
-    <div className="flex w-full max-w-sm flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <div className="flex flex-col gap-4">
         <label className={fieldLabel}>
           Stamp
@@ -143,11 +143,10 @@ export default function GrantsForm({
         {grantMsg && (
           <p
             role="alert"
-            className={`border-[3px] border-black px-3 py-2 text-sm font-bold ${
-              grantMsg.ok
+            className={`border-[3px] border-black px-3 py-2 text-sm font-bold ${grantMsg.ok
                 ? "bg-[var(--color-lime)] text-black"
                 : "bg-[var(--color-danger)] text-white"
-            }`}
+              }`}
           >
             Grant: {grantMsg.text}
           </p>
@@ -155,11 +154,10 @@ export default function GrantsForm({
         {revokeMsg && (
           <p
             role="alert"
-            className={`border-[3px] border-black px-3 py-2 text-sm font-bold ${
-              revokeMsg.ok
+            className={`border-[3px] border-black px-3 py-2 text-sm font-bold ${revokeMsg.ok
                 ? "bg-[var(--color-lime)] text-black"
                 : "bg-[var(--color-danger)] text-white"
-            }`}
+              }`}
           >
             Revoke: {revokeMsg.text}
           </p>

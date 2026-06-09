@@ -25,7 +25,7 @@ export function StampCard({ name, imageUrl, bgColor, textColor }: StampCardProps
       className="border-brutal shadow-hard flex flex-col items-center gap-3 p-4"
       style={{ backgroundColor: bgColor }}
     >
-      <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-[3px] border-[#0A0A0A] bg-white">
+      <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-[3px] border-[#0A0A0A] bg-white">
         <img src={imageUrl} alt={name} className="h-11 w-11 object-contain" />
       </div>
       <span

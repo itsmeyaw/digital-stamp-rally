@@ -22,4 +22,4 @@ export const btnSecondary =
 
 /** Inline error banner. */
 export const errorBanner =
-  "border-[3px] border-black bg-[var(--color-danger)] px-3 py-2 text-sm font-bold text-white";
+  "border-[3px] border-black bg-[var(--color-danger)] px-3 py-2 text-sm font-bold text-danger";
