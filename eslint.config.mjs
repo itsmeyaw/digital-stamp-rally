@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Per-slice implementation worktrees are nested copies of the repo.
+    ".worktrees/**",
   ]),
 ]);
 
