@@ -32,7 +32,7 @@ function form(name: string | null, image: Uint8Array | null, type = "image/png")
   const fd = new FormData();
   if (name !== null) fd.set("name", name);
   if (image !== null) {
-    fd.set("image", new Blob([image], { type }), "stamp.png");
+    fd.set("image", new Blob([image.buffer as ArrayBuffer], { type }), "stamp.png");
   }
   return fd;
 }

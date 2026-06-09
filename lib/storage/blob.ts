@@ -17,7 +17,6 @@ export type BlobUploader = (
 ) => Promise<{ url: string }>;
 
 declare global {
-  // eslint-disable-next-line no-var
   var __dsrBlob: BlobUploader | undefined;
 }
 
