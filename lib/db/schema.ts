@@ -42,15 +42,21 @@ export type NewUser = typeof users.$inferInsert;
  * - `passwordHash`  bcrypt hash; the plaintext password is never stored.
  * - `role`          one of the staff roles "stamper" | "redeemer" | "admin"
  *                   (never "user"). Validated in app code via STAFF_ROLES.
- *
- * The Stamper↔Stamp binding (CONTEXT.md "Stamper") and deactivation flag arrive
- * in later slices (#6); this slice models only the auth columns.
+ * - `stampId`       the single Stamp a Stamper is bound to (CONTEXT.md
+ *                   "Stamper"). NULL for Redeemers and Admins; set for Stampers.
+ *                   Multiple Stampers may share one Stamp design (no uniqueness).
+ *                   An Admin can re-assign it one at a time (#6).
+ * - `active`        deactivation flag (#6). Staff are NEVER hard-deleted; flipping
+ *                   this to false stops the account logging in / granting /
+ *                   redeeming while preserving history (mirrors `stamps.active`).
  */
 export const staff = pgTable("staff", {
   id: uuid("id").defaultRandom().primaryKey(),
   username: text("username").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
   role: text("role").notNull(),
+  stampId: uuid("stamp_id").references(() => stamps.id),
+  active: boolean("active").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

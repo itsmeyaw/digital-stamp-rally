@@ -22,6 +22,13 @@
       "when": 1780997070710,
       "tag": "0002_brainy_masque",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1781002826182,
+      "tag": "0003_bumpy_shaman",
+      "breakpoints": true
     }
   ]
 }
