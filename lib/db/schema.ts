@@ -84,6 +84,8 @@ export const stamps = pgTable("stamps", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
   imageUrl: text("image_url").notNull(),
+  bgColor: text("bg_color").notNull().default("#0057FF"),
+  textColor: text("text_color").notNull().default("#FFFFFF"),
   active: boolean("active").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()

@@ -35,6 +35,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const formData = await req.formData();
   const name = formData.get("name");
   const image = formData.get("image");
+  const bgColorRaw = formData.get("bgColor");
+  const textColorRaw = formData.get("textColor");
 
   if (typeof name !== "string" || name.trim() === "") {
     return NextResponse.json({ error: "name is required" }, { status: 400 });
@@ -55,7 +57,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     image instanceof File && image.name ? image.name : `${name.trim()}.png`;
   const { url } = await uploadStampImage(filename, data, contentType);
 
-  const stamp = await createStamp(getDb(), { name: name.trim(), imageUrl: url });
+  const stamp = await createStamp(getDb(), {
+    name: name.trim(),
+    imageUrl: url,
+    ...(typeof bgColorRaw === "string" && bgColorRaw ? { bgColor: bgColorRaw } : {}),
+    ...(typeof textColorRaw === "string" && textColorRaw ? { textColor: textColorRaw } : {}),
+  });
   return NextResponse.json(stamp, { status: 201 });
 }
 
