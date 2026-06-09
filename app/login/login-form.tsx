@@ -3,13 +3,20 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+interface LoginFormProps {
+  /** Safe same-origin path to navigate to after login. Falls back to the
+   * role-based landing returned by the API when absent. */
+  returnTo?: string;
+}
+
 /**
  * Staff login form. Posts username + password to POST /api/login; on success
  * the server sets the httpOnly session cookie and returns the role-based
- * landing path, to which we navigate. On failure we show an inline error and
- * mint no session.
+ * landing path. If `returnTo` is provided (and was sanitized server-side) we
+ * navigate there instead. On failure we show an inline error and mint no
+ * session.
  */
-export default function LoginForm() {
+export default function LoginForm({ returnTo }: LoginFormProps = {}) {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -31,7 +38,8 @@ export default function LoginForm() {
         return;
       }
       const { landing } = (await res.json()) as { landing: string };
-      router.replace(landing);
+      // Use returnTo if provided; otherwise fall back to the role-based landing.
+      router.replace(returnTo || landing);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
